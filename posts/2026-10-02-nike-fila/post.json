@@ -2,47 +2,97 @@
   "titulo": "O que saiu no grupo: Nike + Fila",
   "foto": "foto.png",
   "foto_gerada_por_ia": true,
-  "agendar_em": "2026-10-05T19:00:00-03:00",
-  "canais": ["instagram", "tiktok"],
-  "legenda": "{gancho} 👀\n\n{precos}\n\nAs ofertas do grupo saem e acabam rápido. Pra não perder a próxima, o link do grupo tá na bio.\n\n#ofertas #achadosdotreino #nike #fila #roupadetreino #tenisdecorrida #academia",
+  "agendar_em": "2026-10-05T20:00:00-03:00",
+  "canais": [
+    "instagram",
+    "tiktok"
+  ],
+  "legenda": "{gancho} 👀\n\n{precos}\nO preço do tênis é com cupom, que sai junto da oferta no grupo.\n\nAs ofertas do grupo saem e acabam rápido. Pra não perder a próxima, o link do grupo tá na bio.\n\n#ofertas #achadosdotreino #nike #fila #roupadetreino #tenisdecorrida #academia",
   "titulo_tiktok": "{gancho}",
-  "gancho": { "x": 60, "y": 48 },
+  "gancho": {
+    "x": 60,
+    "y": 48
+  },
   "produtos": [
     {
       "id": "tenis",
       "nome": "tênis Fila Float Maxxi 2",
       "loja": "fila.com.br",
-      "preco_loja": 699.99,
+      "preco_loja": 599,
       "preco_loja_conferido": false,
-      "preco_grupo": 391,
+      "preco_grupo": 363,
       "print": "print-tenis.png",
       "capa": {
-        "etiqueta": { "x": 1036, "y": 1000, "alinhar": "direita" },
-        "seta": { "img": "curva-esquerda", "x": 578, "y": 1136, "largura": 150 }
+        "etiqueta": {
+          "x": 1036,
+          "y": 1000,
+          "alinhar": "direita"
+        },
+        "seta": {
+          "img": "curva-esquerda",
+          "x": 578,
+          "y": 1136,
+          "largura": 150
+        }
       },
       "final": {
-        "etiqueta": { "x": 1036, "y": 760, "alinhar": "direita" },
-        "seta": { "img": "curva-baixo", "x": 710, "y": 1000, "largura": 130 }
+        "etiqueta": {
+          "x": 1036,
+          "y": 760,
+          "alinhar": "direita"
+        },
+        "seta": {
+          "img": "curva-baixo",
+          "x": 710,
+          "y": 1000,
+          "largura": 130
+        }
       },
-      "recorte": { "cx": 0.368, "cy": 0.826, "zoom": 1.812 }
+      "recorte": {
+        "cx": 0.368,
+        "cy": 0.826,
+        "zoom": 1.812
+      }
     },
     {
       "id": "camiseta",
       "nome": "camiseta Nike Dri-FIT UV Miler",
       "loja": "nike.com.br",
-      "preco_loja": 149.99,
+      "preco_loja": 149,
       "preco_loja_conferido": false,
       "preco_grupo": 79,
       "print": "print-camiseta.png",
       "capa": {
-        "etiqueta": { "x": 60, "y": 226, "alinhar": "esquerda" },
-        "seta": { "img": "zigue", "x": 420, "y": 350, "largura": 123 }
+        "etiqueta": {
+          "x": 60,
+          "y": 226,
+          "alinhar": "esquerda"
+        },
+        "seta": {
+          "img": "zigue",
+          "x": 420,
+          "y": 350,
+          "largura": 123
+        }
       },
       "final": {
-        "etiqueta": { "x": 60, "y": 226, "alinhar": "esquerda" },
-        "seta": { "img": "zigue", "x": 420, "y": 400, "largura": 123 }
+        "etiqueta": {
+          "x": 60,
+          "y": 226,
+          "alinhar": "esquerda"
+        },
+        "seta": {
+          "img": "zigue",
+          "x": 420,
+          "y": 400,
+          "largura": 123
+        }
       },
-      "recorte": { "cx": 0.675, "cy": 0.40, "zoom": 1.672 }
+      "recorte": {
+        "cx": 0.675,
+        "cy": 0.4,
+        "zoom": 1.672
+      }
     }
   ]
 }

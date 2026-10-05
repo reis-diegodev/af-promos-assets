@@ -35,6 +35,13 @@ TEMPLATE = RAIZ / "template" / "carrossel.html.j2"
 LARGURA, ALTURA, ALTURA_RECORTE = 1080, 1440, 640
 SETAS = {p.stem for p in (ASSETS / "setas").glob("*.png")} - {"assinatura", "deslize"}
 CANAIS_SUPORTADOS = {"instagram", "tiktok"}
+# automatic: o Buffer publica sozinho. notification: o Buffer avisa no celular e você publica
+# pelo app da rede, o que permite escolher a música (a API não envia áudio).
+MODOS_PUBLICACAO = ("automatic", "notification")
+
+
+def modo_publicacao(config: dict, canal: str) -> str:
+    return config.get("publicacao", {}).get(canal, "automatic")
 BUFFER_URL = os.environ.get("BUFFER_API_URL", "https://api.buffer.com")
 
 
@@ -250,6 +257,9 @@ def validar(pasta: Path, config: dict, para_agendar: bool = False) -> tuple[dict
             erros.append(f"produto {pid}: recorte precisa de cx e cy entre 0 e 1 e zoom >= 1")
 
     for canal in post["canais"]:
+        modo = config.get("publicacao", {}).get(canal, "automatic")
+        if modo not in MODOS_PUBLICACAO:
+            erros.append(f"config.json: publicacao.{canal} deve ser {' ou '.join(MODOS_PUBLICACAO)}, não '{modo}'")
         if canal not in CANAIS_SUPORTADOS:
             erros.append(f"canal desconhecido: {canal}")
         elif para_agendar and not re.fullmatch(r"[0-9a-f]{24}", str(config["canais"].get(canal, ""))):
@@ -530,7 +540,7 @@ def agendar(pasta: Path, config: dict, dry_run: bool, forcar: list[str], sem_ver
             # manifestos antigos tinham uma legenda só, igual para todos os canais
             "text": manifesto.get("legendas", {}).get(canal) or manifesto["legenda"],
             "channelId": config["canais"][canal],
-            "schedulingType": "automatic",
+            "schedulingType": modo_publicacao(config, canal),
             "mode": "customScheduled",
             "dueAt": due_at,
             "aiAssisted": True,
@@ -552,10 +562,12 @@ def agendar(pasta: Path, config: dict, dry_run: bool, forcar: list[str], sem_ver
             gravar_json(pasta / "post.json", post)
             falhar(f"{canal}: Buffer recusou ({r.get('message', r['__typename'])}). "
                    "Canais já agendados ficaram registrados no post.json.")
-        feito[canal] = {"id": r["post"]["id"], "dueAt": r["post"]["dueAt"]}
+        modo = entrada["schedulingType"]
+        feito[canal] = {"id": r["post"]["id"], "dueAt": r["post"]["dueAt"], "publicacao": modo}
         post["agendamento"].update({"commit": sha, "urls": urls})
         gravar_json(pasta / "post.json", post)  # grava a cada canal: um erro no seguinte não perde o anterior
-        print(f"  ✓ {canal}: agendado para {post['agendar_em']} (id {r['post']['id']})")
+        como = "aviso no celular para publicar com música" if modo == "notification" else "publicação automática"
+        print(f"  ✓ {canal}: agendado para {post['agendar_em']}, {como} (id {r['post']['id']})")
 
     for a in avisos[ja_mostrados:]:
         print(f"  ! {a}")

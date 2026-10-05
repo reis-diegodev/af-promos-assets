@@ -78,6 +78,24 @@ Veja `posts/2026-10-02-nike-fila/post.json`. Preços: `preco_cheio` é o "de" e 
   opcionalmente `{hashtags}` para escolher onde as hashtags entram (sem o marcador, elas vão
   no fim). Nunca escreva `#` à mão.
 
+## Publicação com música
+
+A API do Buffer não envia áudio. Por isso `publicacao` no `config.json` define o modo de
+cada rede:
+
+- `notification` (padrão do perfil): no horário, o app do Buffer avisa no celular; você toca
+  no aviso, o post abre no app da rede, você escolhe um som em alta e publica.
+- `automatic`: o Buffer publica sozinho, sem música.
+
+Para o aviso chegar, o app do Buffer precisa estar instalado, logado e com notificações
+ativas. O `post.json` registra o modo usado em cada canal.
+
+## Depois de agendar: merge do PR
+
+Cada chat do Projeto grava num branch próprio. Depois de agendar, abra o PR e faça o merge
+com **Create a merge commit**. Nunca use Squash nem Rebase: os links das imagens enviados ao
+Buffer apontam para o commit original, e esses modos o tiram do histórico.
+
 ## Hashtags
 
 Montadas pelo script para cada canal a partir do bloco `hashtags` do `config.json`:

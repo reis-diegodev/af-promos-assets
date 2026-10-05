@@ -2,7 +2,7 @@
   "titulo": "O que saiu no grupo: Nike + Fila",
   "foto": "foto.png",
   "foto_gerada_por_ia": true,
-  "agendar_em": "2026-10-05T20:00:00-03:00",
+  "agendar_em": "2026-10-05T20:10:00-03:00",
   "canais": [
     "instagram",
     "tiktok"
@@ -90,5 +90,24 @@
         "zoom": 1.672
       }
     }
-  ]
+  ],
+  "agendamento": {
+    "posts": {
+      "instagram": {
+        "id": "6ac42b8f8a7578ba6c1a85bc",
+        "dueAt": "2026-10-05T23:10:00.000Z"
+      },
+      "tiktok": {
+        "id": "6ac42b9098d02b181e15b20e",
+        "dueAt": "2026-10-05T23:10:00.000Z"
+      }
+    },
+    "commit": "d678036c341908b32cf2edf0abbefe923056aba9",
+    "urls": [
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/d678036c341908b32cf2edf0abbefe923056aba9/posts/2026-10-02-nike-fila/out/slide-1.jpg",
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/d678036c341908b32cf2edf0abbefe923056aba9/posts/2026-10-02-nike-fila/out/slide-2.jpg",
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/d678036c341908b32cf2edf0abbefe923056aba9/posts/2026-10-02-nike-fila/out/slide-3.jpg",
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/d678036c341908b32cf2edf0abbefe923056aba9/posts/2026-10-02-nike-fila/out/slide-4.jpg"
+    ]
+  }
 }

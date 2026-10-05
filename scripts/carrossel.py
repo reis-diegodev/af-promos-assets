@@ -424,6 +424,7 @@ def agendar(pasta: Path, config: dict, dry_run: bool, forcar: list[str], sem_ver
             sys.exit(1)
         erros = []
     relatar(erros, avisos)
+    ja_mostrados = len(avisos)
 
     slides = manifesto["slides"]
     sha = checar_git(slides, avisos, estrito=not dry_run)
@@ -470,7 +471,7 @@ def agendar(pasta: Path, config: dict, dry_run: bool, forcar: list[str], sem_ver
         gravar_json(pasta / "post.json", post)  # grava a cada canal: um erro no seguinte não perde o anterior
         print(f"  ✓ {canal}: agendado para {post['agendar_em']} (id {r['post']['id']})")
 
-    for a in avisos:
+    for a in avisos[ja_mostrados:]:
         print(f"  ! {a}")
     if not dry_run:
         print("\n✓ Pronto. Faça commit do post.json para registrar o agendamento.")

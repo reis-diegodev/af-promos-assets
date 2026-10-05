@@ -26,14 +26,18 @@ Se faltar algo, pergunte só o que falta. Nunca estime nem complete um preço.
 1. Atualize o repo (`git pull`). Crie `posts/AAAA-MM-DD-slug/` e salve nela a foto e os prints
    (`print-<id>.png`).
 2. Olhe a foto e decida o layout (seção abaixo). Escreva o `post.json` no formato de
-   `posts/2026-10-02-nike-fila/post.json`. Na legenda, escreva só a prosa e as hashtags e use
-   `{gancho}` e `{precos}`: o script insere os números. Confira que os preços batem com o
+   `posts/2026-10-02-nike-fila/post.json`. Na legenda, escreva só a prosa e use `{gancho}` e
+   `{precos}`: o script insere os números. **Nunca escreva hashtags:** o script monta as de
+   cada canal a partir do config.json (use `{hashtags}` só se quiser escolher a posição). Confira que os preços batem com o
    print de cada produto; se não baterem, pare e pergunte.
 3. Rode `python scripts/carrossel.py renderizar posts/<pasta>`. Corrija todo aviso de
    layout e renderize de novo. Abra `out/previa.jpg` e confira o que o script não vê: a
    etiqueta está perto da peça certa, a seta aponta para a peça, o recorte mostra o produto
-   inteiro e nada cobre rosto ou produto.
-4. Mostre ao usuário a prévia, a legenda que o script imprimiu, a data e os canais. Pergunte
+   inteiro e nada cobre rosto ou produto. Se aparecer aviso de produto sem marca
+   reconhecida, adicione a marca em `hashtags.por_marca` no config.json ou o campo `marca` no
+   produto.
+4. Mostre ao usuário a prévia, as legendas de cada canal que o script imprimiu, a data e os
+   canais. Pergunte
    se aprova.
 5. **Só depois de um "aprovado" explícito:** `git add posts/<pasta>`, commit e push. Rode
    `agendar --dry-run`, confira, e depois `agendar`.

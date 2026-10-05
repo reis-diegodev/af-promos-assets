@@ -95,16 +95,71 @@ def calcular_gancho(produtos: list[dict], item: str) -> dict:
             "total_cheio": total_cheio, "total_grupo": total_grupo}
 
 
-def montar_textos(post: dict, gancho: dict) -> dict:
+def marcas_do_produto(produto: dict, por_marca: dict) -> list[str]:
+    """Marcas citadas no nome do produto (ou no campo opcional 'marca'), na ordem do config."""
+    texto = f"{produto.get('nome', '')} {produto.get('marca', '')}"
+    return [m for m in por_marca if re.search(rf"(?<!\w){re.escape(m)}(?!\w)", texto, re.IGNORECASE)]
+
+
+def montar_hashtags(post: dict, config: dict, canal: str) -> tuple[list[str], list[str]]:
+    """Fixas do perfil + as das marcas do post, sem repetir, até o limite do canal.
+    As fixas vêm primeiro: identificam o perfil e nunca são cortadas pelo limite."""
+    cfg = config.get("hashtags", {})
+    por_marca = cfg.get("por_marca", {})
+    limite = cfg.get("limite", {}).get(canal, 5)
+    avisos, tags = [], list(cfg.get("fixas", {}).get(canal, []))
+    for p in post["produtos"]:
+        marcas = marcas_do_produto(p, por_marca)
+        if not marcas:
+            avisos.append(f"produto {p['id']}: nenhuma marca reconhecida no nome; "
+                          "adicione a marca em hashtags.por_marca no config.json ou o campo 'marca' no produto")
+        tags += [por_marca[m] for m in marcas]
+    unicas = list(dict.fromkeys(t.lower() for t in tags))
+    if len(unicas) > limite:
+        avisos.append(f"{canal}: {len(unicas)} hashtags para um limite de {limite}; ficaram fora {' '.join(unicas[limite:])}")
+    return unicas[:limite], avisos
+
+
+def montar_textos(post: dict, gancho: dict, config: dict) -> dict:
     frase = f"{gancho['linha1']} {gancho['linha2']}"
     frase = frase[0].upper() + frase[1:]
     precos = "\n".join(
         f"• {p['nome'][0].upper() + p['nome'][1:]}: de {fmt_preco(p['preco_cheio'])} por {fmt_preco(p['preco_grupo'])}"
         for p in post["produtos"]
     )
-    legenda = post["legenda"].replace("{gancho}", frase).replace("{precos}", precos)
+    base = post["legenda"].replace("{gancho}", frase).replace("{precos}", precos)
+    legendas, hashtags, avisos = {}, {}, []
+    for canal in post["canais"]:
+        tags, av = montar_hashtags(post, config, canal)
+        avisos += [a for a in av if a not in avisos]
+        linha = " ".join(tags)
+        if "{hashtags}" in base:
+            texto = base.replace("{hashtags}", linha)
+        else:
+            texto = f"{base.rstrip()}\n\n{linha}" if linha else base
+        legendas[canal] = re.sub(r"\n{3,}", "\n\n", texto).strip()
+        hashtags[canal] = tags
     titulo = post.get("titulo_tiktok", "{gancho}").replace("{gancho}", frase)[:90]
-    return {"legenda": legenda, "titulo_tiktok": titulo}
+    return {"legendas": legendas, "hashtags": hashtags, "titulo_tiktok": titulo, "avisos": avisos}
+
+
+HASHTAG_VALIDA = re.compile(r"#[^\s#]+")
+
+
+def checar_hashtags(post: dict, config: dict, para_agendar: bool) -> tuple[list[str], list[str]]:
+    erros, avisos = [], []
+    cfg = config.get("hashtags")
+    if not cfg:
+        avisos.append("config.json sem o bloco 'hashtags': os posts vão sair sem hashtags")
+        return erros, avisos
+    todas = [t for lista in cfg.get("fixas", {}).values() for t in lista] + list(cfg.get("por_marca", {}).values())
+    for t in todas:
+        if not HASHTAG_VALIDA.fullmatch(t):
+            erros.append(f"config.json: hashtag inválida '{t}' (precisa começar com # e não ter espaço)")
+    # o post já aprovado usa a legenda gravada no manifesto; a regra vale para conteúdo novo
+    if not para_agendar and re.search(r"(?<![\w&])#\w", post.get("legenda", "")):
+        erros.append("legenda: hashtags vêm do config.json; tire os # da legenda (use {hashtags} para escolher onde entram)")
+    return erros, avisos
 
 
 DATA_CRAVADA = re.compile(r"\b\d{1,2}/\d{1,2}\b|\bdia\s+\d{1,2}\b", re.IGNORECASE)
@@ -201,6 +256,9 @@ def validar(pasta: Path, config: dict, para_agendar: bool = False) -> tuple[dict
             avisos.append(f"config.json: o id do canal {canal} não parece um id do Buffer, rode 'canais'")
 
     erros.extend(checar_termos(post, config))
+    e_tags, a_tags = checar_hashtags(post, config, para_agendar)
+    erros.extend(e_tags)
+    avisos.extend(a_tags)
 
     try:
         quando = datetime.fromisoformat(post["agendar_em"])
@@ -286,11 +344,11 @@ def renderizar(pasta: Path, config: dict) -> None:
         grade.paste(m, ((i % colunas) * 372, (i // colunas) * 492))
     grade.save(saida / "previa.jpg", quality=88)
 
-    textos = montar_textos(post, gancho)
+    textos = montar_textos(post, gancho, config)
     gravar_json(saida / "manifesto.json", {
         "post_hash": hash_post(post),
         "slides": [str(s.relative_to(RAIZ)) for s in slides],
-        "legenda": textos["legenda"],
+        "legendas": textos["legendas"],
         "titulo_tiktok": textos["titulo_tiktok"],
         "gerado_em": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     })
@@ -303,7 +361,11 @@ def renderizar(pasta: Path, config: dict) -> None:
             print(f"  ! {p}")
     else:
         print("  layout: nenhum texto fora do slide ou sobreposto")
-    print(f"\n--- legenda ---\n{textos['legenda']}\n---------------")
+    for a in textos["avisos"]:
+        print(f"  ! {a}")
+    for canal, legenda in textos["legendas"].items():
+        print(f"\n--- legenda {canal} ---\n{legenda}")
+    print("---------------")
 
 
 CHECAGEM_LAYOUT = """
@@ -465,7 +527,8 @@ def agendar(pasta: Path, config: dict, dry_run: bool, forcar: list[str], sem_ver
             print(f"  = {canal}: já agendado ({feito[canal]['id']}). Use --forcar {canal} para agendar de novo.")
             continue
         entrada = {
-            "text": manifesto["legenda"],
+            # manifestos antigos tinham uma legenda só, igual para todos os canais
+            "text": manifesto.get("legendas", {}).get(canal) or manifesto["legenda"],
             "channelId": config["canais"][canal],
             "schedulingType": "automatic",
             "mode": "customScheduled",

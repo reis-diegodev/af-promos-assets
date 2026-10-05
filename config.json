@@ -56,5 +56,43 @@
     "últimas horas",
     "últimas unidades",
     "por tempo limitado"
-  ]
+  ],
+  "hashtags": {
+    "limite": {
+      "instagram": 5,
+      "tiktok": 8
+    },
+    "fixas": {
+      "instagram": [
+        "#achadosdotreino",
+        "#roupadetreino"
+      ],
+      "tiktok": [
+        "#achadosdotreino",
+        "#achados",
+        "#ofertas",
+        "#academia",
+        "#treino"
+      ]
+    },
+    "por_marca": {
+      "nike": "#nike",
+      "adidas": "#adidas",
+      "puma": "#puma",
+      "fila": "#fila",
+      "asics": "#asics",
+      "mizuno": "#mizuno",
+      "olympikus": "#olympikus",
+      "under armour": "#underarmour",
+      "new balance": "#newbalance",
+      "hoka": "#hoka",
+      "reebok": "#reebok",
+      "kappa": "#kappa",
+      "oakley": "#oakley",
+      "lacoste": "#lacoste",
+      "ralph lauren": "#ralphlauren",
+      "garmin": "#garmin",
+      "g-shock": "#gshock"
+    }
+  }
 }

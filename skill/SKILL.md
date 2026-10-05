@@ -9,8 +9,8 @@ Tudo roda a partir do repositório do Projeto (`template/`, `assets/`, `scripts/
 `posts/`). Leia o `README.md` do repo na primeira vez da sessão.
 
 Divisão do trabalho: **você decide o layout olhando a foto e escreve a legenda; o script faz
-as contas, o gancho, as linhas de preço, a checagem de layout e o agendamento.** Nunca
-calcule preço ou desconto à mão.
+as contas, o gancho, as linhas de preço, as hashtags, a checagem de layout e o agendamento.**
+Nunca calcule preço ou desconto à mão.
 
 ## O que o usuário manda
 
@@ -37,8 +37,7 @@ Se faltar algo, pergunte só o que falta. Nunca estime nem complete um preço.
    reconhecida, adicione a marca em `hashtags.por_marca` no config.json ou o campo `marca` no
    produto.
 4. Mostre ao usuário a prévia, as legendas de cada canal que o script imprimiu, a data e os
-   canais. Pergunte
-   se aprova.
+   canais. Pergunte se aprova.
 5. **Só depois de um "aprovado" explícito:** `git add posts/<pasta>`, commit e push. Rode
    `agendar --dry-run`, confira, e depois `agendar`.
 6. Faça commit e push do `post.json` atualizado (ele guarda os ids do Buffer). Responda com
@@ -76,7 +75,8 @@ O slide tem 1080x1440 px e a foto o cobre inteiro.
 
 ## Regras
 
-- Nunca agende sem aprovação explícita do usuário nesta conversa.
+- Nunca agende sem aprovação explícita do usuário. Se ele disser que já aprovou a prévia em
+  outra conversa, isso vale como aprovação.
 - Nunca invente, arredonde nem "corrija" um preço; use exatamente o que o usuário informou.
 - Nada de tempo cravado (hoje, ontem, amanhã, datas, dias da semana) nem de disponibilidade
   ("ainda dá tempo", "só até"): o post pode sair dias depois da oferta. O FOMO vem de "saiu

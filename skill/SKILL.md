@@ -16,7 +16,7 @@ calcule preço ou desconto à mão.
 
 - a foto (gerada por IA, com os produtos fiéis);
 - um print do grupo para cada produto;
-- de cada produto: nome, loja oficial, preço da loja oficial e preço que saiu no grupo;
+- de cada produto: nome e o "de ➜ por" da mensagem do grupo (`preco_cheio` e `preco_grupo`);
 - data e hora de publicação.
 
 Se faltar algo, pergunte só o que falta. Nunca estime nem complete um preço.
@@ -27,14 +27,14 @@ Se faltar algo, pergunte só o que falta. Nunca estime nem complete um preço.
    (`print-<id>.png`).
 2. Olhe a foto e decida o layout (seção abaixo). Escreva o `post.json` no formato de
    `posts/2026-10-02-nike-fila/post.json`. Na legenda, escreva só a prosa e as hashtags e use
-   `{gancho}` e `{precos}`: o script insere os números. Marque `preco_loja_conferido: true`
-   apenas nos produtos cujo preço da loja o usuário confirmou.
+   `{gancho}` e `{precos}`: o script insere os números. Confira que os preços batem com o
+   print de cada produto; se não baterem, pare e pergunte.
 3. Rode `python scripts/carrossel.py renderizar posts/<pasta>`. Corrija todo aviso de
    layout e renderize de novo. Abra `out/previa.jpg` e confira o que o script não vê: a
    etiqueta está perto da peça certa, a seta aponta para a peça, o recorte mostra o produto
    inteiro e nada cobre rosto ou produto.
 4. Mostre ao usuário a prévia, a legenda que o script imprimiu, a data e os canais. Pergunte
-   se aprova. Se algum produto estiver com `preco_loja_conferido: false`, diga qual.
+   se aprova.
 5. **Só depois de um "aprovado" explícito:** `git add posts/<pasta>`, commit e push. Rode
    `agendar --dry-run`, confira, e depois `agendar`.
 6. Faça commit e push do `post.json` atualizado (ele guarda os ids do Buffer). Responda com
@@ -68,6 +68,9 @@ O slide tem 1080x1440 px e a foto o cobre inteiro.
 
 - Nunca agende sem aprovação explícita do usuário nesta conversa.
 - Nunca invente, arredonde nem "corrija" um preço; use exatamente o que o usuário informou.
+- Nada de tempo cravado (hoje, ontem, amanhã, datas, dias da semana) nem de disponibilidade
+  ("ainda dá tempo", "só até"): o post pode sair dias depois da oferta. O FOMO vem de "saiu
+  por" e de não perder a próxima. O script recusa os termos de `termos_proibidos` no config.json.
 - `foto_gerada_por_ia: true` quando a foto for de IA: vira a sinalização de IA no Instagram.
 - Chaves só por variável de ambiente. Nunca peça a chave no chat nem grave em arquivo.
 - Se o Buffer ou o GitHub recusarem algo, mostre a mensagem exata ao usuário em vez de

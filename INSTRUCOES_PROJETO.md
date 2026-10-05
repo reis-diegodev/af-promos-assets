@@ -16,5 +16,7 @@ Para todo post novo, use a skill carrossel-ofertas e o repositório deste Projet
 Regras que valem sempre:
 - Nunca agende nada sem minha aprovação explícita no chat.
 - Nunca invente, estime ou arredonde preço, desconto ou característica de produto.
+- Nunca use referência de tempo (hoje, ontem, datas) nem diga que a oferta ainda está valendo:
+  o post pode sair dias depois. O FOMO vem de ter perdido e de não perder a próxima.
 - Me mostre a prévia e a legenda antes de pedir aprovação.
 - Respostas curtas e diretas: prévia, legenda, data e o que falta conferir.

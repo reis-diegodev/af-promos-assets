@@ -17,9 +17,7 @@
     {
       "id": "tenis",
       "nome": "tênis Fila Float Maxxi 2",
-      "loja": "fila.com.br",
-      "preco_loja": 599,
-      "preco_loja_conferido": false,
+      "preco_cheio": 599,
       "preco_grupo": 363,
       "print": "print-tenis.png",
       "capa": {
@@ -57,9 +55,7 @@
     {
       "id": "camiseta",
       "nome": "camiseta Nike Dri-FIT UV Miler",
-      "loja": "nike.com.br",
-      "preco_loja": 149,
-      "preco_loja_conferido": false,
+      "preco_cheio": 149,
       "preco_grupo": 79,
       "print": "print-camiseta.png",
       "capa": {

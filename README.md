@@ -36,7 +36,7 @@ Dependências: `pip install -r requirements.txt` e `playwright install chromium`
 
 ```bash
 python scripts/carrossel.py renderizar posts/2026-10-05-exemplo   # gera out/slide-*.jpg e out/previa.jpg
-# revisar a prévia; marcar preco_loja_conferido: true em cada produto
+# revisar a prévia: os números batem com os prints?
 git add posts/2026-10-05-exemplo && git commit -m "post 2026-10-05" && git push
 python scripts/carrossel.py agendar posts/2026-10-05-exemplo --dry-run
 python scripts/carrossel.py agendar posts/2026-10-05-exemplo
@@ -47,8 +47,8 @@ git commit -am "agendado 2026-10-05" && git push
 
 | Situação | O que o script faz |
 |---|---|
-| Preço do grupo não é menor que o da loja | recusa |
-| Preço da loja oficial não conferido | recusa agendar |
+| Preço do grupo não é menor que o preço cheio | recusa |
+| Legenda ou textos com tempo cravado ("hoje", "ontem", datas, dias da semana) ou disponibilidade ("ainda dá tempo") | recusa (lista em `termos_proibidos` no config.json) |
 | post.json mudou depois da renderização | recusa agendar até renderizar de novo |
 | Slides fora do commit, alterados ou sem push | recusa agendar |
 | URL pública não responde com imagem | recusa agendar |
@@ -61,7 +61,8 @@ metade." e abaixo disso vira "saiu R$ X mais barato.".
 
 ## post.json
 
-Veja `posts/2026-10-02-nike-fila/post.json`. Campos de layout (px num slide de 1080x1440):
+Veja `posts/2026-10-02-nike-fila/post.json`. Preços: `preco_cheio` é o "de" e `preco_grupo` é o
+"por" da mensagem do grupo, exatamente como aparecem no print. Campos de layout (px num slide de 1080x1440):
 
 - `gancho`: canto superior esquerdo do bloco do gancho na capa.
 - `capa.etiqueta` e `final.etiqueta`: `x`, `y` e `alinhar` (`esquerda` usa x como borda

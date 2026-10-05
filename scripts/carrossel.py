@@ -80,31 +80,50 @@ def git(*args: str) -> subprocess.CompletedProcess:
 
 def calcular_gancho(produtos: list[dict], item: str) -> dict:
     """O gancho vem da conta, nunca de texto livre: o post não promete o que os números não sustentam."""
-    total_loja = sum(p["preco_loja"] for p in produtos)
+    total_cheio = sum(p["preco_cheio"] for p in produtos)
     total_grupo = sum(p["preco_grupo"] for p in produtos)
-    desconto = 1 - total_grupo / total_loja
+    desconto = 1 - total_grupo / total_cheio
     sujeito = f"esse {item}" if len(produtos) > 1 else "esse achado"
-    linha1 = f"{sujeito} de {fmt_preco(round(total_loja))}"
+    linha1 = f"{sujeito} de {fmt_preco(round(total_cheio))}"
     if desconto >= 0.5:
         linha2 = "saiu pela metade."
     elif desconto >= 0.4:
         linha2 = "saiu quase pela metade."
     else:
-        linha2 = f"saiu {fmt_preco(math.floor(total_loja - total_grupo))} mais barato."
+        linha2 = f"saiu {fmt_preco(math.floor(total_cheio - total_grupo))} mais barato."
     return {"linha1": linha1, "linha2": linha2, "desconto": desconto,
-            "total_loja": total_loja, "total_grupo": total_grupo}
+            "total_cheio": total_cheio, "total_grupo": total_grupo}
 
 
 def montar_textos(post: dict, gancho: dict) -> dict:
     frase = f"{gancho['linha1']} {gancho['linha2']}"
     frase = frase[0].upper() + frase[1:]
     precos = "\n".join(
-        f"• {p['nome'][0].upper() + p['nome'][1:]}: de {fmt_preco(p['preco_loja'])} por {fmt_preco(p['preco_grupo'])}"
+        f"• {p['nome'][0].upper() + p['nome'][1:]}: de {fmt_preco(p['preco_cheio'])} por {fmt_preco(p['preco_grupo'])}"
         for p in post["produtos"]
     )
     legenda = post["legenda"].replace("{gancho}", frase).replace("{precos}", precos)
     titulo = post.get("titulo_tiktok", "{gancho}").replace("{gancho}", frase)[:90]
     return {"legenda": legenda, "titulo_tiktok": titulo}
+
+
+DATA_CRAVADA = re.compile(r"\b\d{1,2}/\d{1,2}\b|\bdia\s+\d{1,2}\b", re.IGNORECASE)
+
+
+def checar_termos(post: dict, config: dict) -> list[str]:
+    """O post pode sair dias depois da oferta: nenhum texto público pode cravar quando ela aconteceu
+    nem afirmar que ainda está valendo. A lista de termos fica no config.json."""
+    termos = config.get("termos_proibidos", [])
+    padrao = re.compile(r"(?<!\w)(" + "|".join(re.escape(t) for t in termos) + r")(?!\w)", re.IGNORECASE) if termos else None
+    textos = {"legenda": post.get("legenda", ""), "titulo_tiktok": post.get("titulo_tiktok", "")}
+    textos.update({f"config.texto.{k}": v for k, v in config.get("texto", {}).items()})
+    erros = []
+    for onde, texto in textos.items():
+        achados = (padrao.findall(texto) if padrao else []) + DATA_CRAVADA.findall(texto)
+        if achados:
+            erros.append(f"{onde}: referência de tempo ou disponibilidade ({', '.join(sorted(set(a.lower() for a in achados)))}). "
+                         "O post pode sair depois da oferta; tire o termo")
+    return erros
 
 
 def recorte_px(rec: dict, foto_w: int, foto_h: int) -> dict:
@@ -148,21 +167,19 @@ def validar(pasta: Path, config: dict, para_agendar: bool = False) -> tuple[dict
 
     for p in produtos:
         pid = p.get("id", "?")
-        for campo in ("nome", "loja", "preco_loja", "preco_grupo", "print", "capa", "final", "recorte"):
+        for campo in ("nome", "preco_cheio", "preco_grupo", "print", "capa", "final", "recorte"):
             if campo not in p:
                 erros.append(f"produto {pid}: falta '{campo}'")
-        if any(c not in p for c in ("preco_loja", "preco_grupo", "print", "capa", "final", "recorte")):
+        if any(c not in p for c in ("preco_cheio", "preco_grupo", "print", "capa", "final", "recorte")):
             continue
-        if not all(isinstance(p[c], (int, float)) and p[c] > 0 for c in ("preco_loja", "preco_grupo")):
+        if not all(isinstance(p[c], (int, float)) and p[c] > 0 for c in ("preco_cheio", "preco_grupo")):
             erros.append(f"produto {pid}: preços precisam ser números positivos")
-        elif p["preco_grupo"] >= p["preco_loja"]:
-            erros.append(f"produto {pid}: preço do grupo não é menor que o da loja")
-        elif 1 - p["preco_grupo"] / p["preco_loja"] < 0.10:
+        elif p["preco_grupo"] >= p["preco_cheio"]:
+            erros.append(f"produto {pid}: preço do grupo não é menor que o preço cheio")
+        elif 1 - p["preco_grupo"] / p["preco_cheio"] < 0.10:
             avisos.append(f"produto {pid}: desconto abaixo de 10%, fraco para o formato")
         if not (pasta / p["print"]).is_file():
             erros.append(f"produto {pid}: print não encontrado: {p['print']}")
-        if para_agendar and p.get("preco_loja_conferido") is not True:
-            erros.append(f"produto {pid}: confira o preço da loja oficial e marque 'preco_loja_conferido': true")
         for bloco in ("capa", "final"):
             et = p[bloco].get("etiqueta", {})
             dentro(et, f"produto {pid} {bloco}.etiqueta")
@@ -182,6 +199,8 @@ def validar(pasta: Path, config: dict, para_agendar: bool = False) -> tuple[dict
             erros.append(f"canal desconhecido: {canal}")
         elif para_agendar and not re.fullmatch(r"[0-9a-f]{24}", str(config["canais"].get(canal, ""))):
             avisos.append(f"config.json: o id do canal {canal} não parece um id do Buffer, rode 'canais'")
+
+    erros.extend(checar_termos(post, config))
 
     try:
         quando = datetime.fromisoformat(post["agendar_em"])
@@ -223,8 +242,8 @@ def renderizar(pasta: Path, config: dict) -> None:
                                    "largura": s.get("largura", 130), "rot": s.get("rot", 0)}
 
     produtos = [{
-        "id": p["id"], "nome": p["nome"], "loja": p["loja"],
-        "preco_loja": fmt_preco(p["preco_loja"]), "preco_grupo": fmt_preco(p["preco_grupo"]),
+        "id": p["id"], "nome": p["nome"],
+        "preco_cheio": fmt_preco(p["preco_cheio"]), "preco_grupo": fmt_preco(p["preco_grupo"]),
         "print": (pasta / p["print"]).resolve().as_uri(),
         "capa": {"etiqueta": p["capa"]["etiqueta"], "seta": seta(p["capa"].get("seta"))},
         "final": {"etiqueta": p["final"]["etiqueta"], "seta": seta(p["final"].get("seta"))},

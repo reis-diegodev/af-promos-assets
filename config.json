@@ -1,0 +1,15 @@
+{
+  "github_repo": "reis-diegodev/af-promos-assets",
+  "canais": {
+    "instagram": "COLE_AQUI_O_ID_DO_CANAL",
+    "tiktok": "COLE_AQUI_O_ID_DO_CANAL"
+  },
+  "texto": {
+    "item": "outfit",
+    "desliza": "desliza",
+    "na_loja": "na loja oficial",
+    "saiu_por": "no grupo saiu por",
+    "cta_1": "entra no grupo",
+    "cta_2": "pra não perder a próxima · link na bio"
+  }
+}

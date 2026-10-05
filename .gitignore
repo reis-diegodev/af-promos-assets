@@ -1,0 +1,5 @@
+# gerados a cada renderização, só para revisão local
+posts/*/out/carrossel.html
+posts/*/out/previa.jpg
+__pycache__/
+.env

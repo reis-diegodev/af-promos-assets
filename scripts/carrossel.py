@@ -399,7 +399,11 @@ def checar_git(slides: list[str], avisos: list[str], estrito: bool) -> str:
             problemas.append(f"{s} não está no commit {sha[:7]}: faça commit dos slides")
         elif git("status", "--porcelain", "--", s).stdout.strip():
             problemas.append(f"{s} mudou depois do commit: faça commit de novo")
-    if not git("branch", "-r", "--contains", sha).stdout.strip():
+    # clones rasos/de um branch só não conhecem todos os branches remotos: aceita também
+    # o commit ser a ponta de algum branch no GitHub
+    no_github = bool(git("branch", "-r", "--contains", sha).stdout.strip()) or \
+        sha in git("ls-remote", "--heads", "origin").stdout.split()
+    if not no_github:
         problemas.append(f"o commit {sha[:7]} ainda não foi enviado ao GitHub: faça git push")
     if problemas:
         if estrito:

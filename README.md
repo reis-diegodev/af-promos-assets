@@ -53,6 +53,9 @@ git commit -am "agendado 2026-10-05" && git push
 | Slides fora do commit, alterados ou sem push | recusa agendar |
 | URL pública não responde com imagem | recusa agendar |
 | Canal já agendado | pula (`--forcar canal` para reagendar) |
+| `#` escrito à mão na legenda de um post novo | recusa (hashtags vêm do config.json) |
+| Produto sem marca reconhecida para hashtag | avisa na renderização |
+| Mais hashtags que o limite do canal | avisa e corta as de marca |
 | Texto saindo do slide ou sobreposto | avisa na renderização |
 
 O gancho e as linhas de preço da legenda são calculados no código a partir dos preços:
@@ -71,4 +74,36 @@ Veja `posts/2026-10-02-nike-fila/post.json`. Preços: `preco_cheio` é o "de" e 
   `largura` e, opcional, `rot` em graus.
 - `recorte`: `cx` e `cy` (centro do produto na foto, de 0 a 1) e `zoom` (1,6 a 1,9 costuma
   enquadrar uma peça). O script converte e nunca deixa borda vazia.
-- `legenda`: texto livre com `{gancho}` e `{precos}`, que o script substitui.
+- `legenda`: só a prosa, com `{gancho}` e `{precos}`, que o script substitui, e
+  opcionalmente `{hashtags}` para escolher onde as hashtags entram (sem o marcador, elas vão
+  no fim). Nunca escreva `#` à mão.
+
+## Publicação com música
+
+A API do Buffer não envia áudio. Por isso `publicacao` no `config.json` define o modo de
+cada rede:
+
+- `notification` (padrão do perfil): no horário, o app do Buffer avisa no celular; você toca
+  no aviso, o post abre no app da rede, você escolhe um som em alta e publica.
+- `automatic`: o Buffer publica sozinho, sem música.
+
+Para o aviso chegar, o app do Buffer precisa estar instalado, logado e com notificações
+ativas. O `post.json` registra o modo usado em cada canal.
+
+## Depois de agendar: merge do PR
+
+Cada chat do Projeto grava num branch próprio. Depois de agendar, abra o PR e faça o merge
+com **Create a merge commit**. Nunca use Squash nem Rebase: os links das imagens enviados ao
+Buffer apontam para o commit original, e esses modos o tiram do histórico.
+
+## Hashtags
+
+Montadas pelo script para cada canal a partir do bloco `hashtags` do `config.json`:
+
+- `fixas.<canal>`: as do perfil, sempre presentes e sempre primeiro.
+- `por_marca`: marca → hashtag. O script procura a marca no nome do produto (ou no campo
+  opcional `marca` do produto) e acrescenta a hashtag dela.
+- `limite.<canal>`: máximo por post. Se passar, as de marca excedentes ficam de fora.
+
+O Instagram e o TikTok recebem a mesma prosa com hashtags diferentes. O manifesto guarda a
+legenda final de cada canal.

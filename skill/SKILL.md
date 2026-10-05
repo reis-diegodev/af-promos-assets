@@ -49,7 +49,7 @@ O slide tem 1080x1440 px e a foto o cobre inteiro.
 
 - **Gancho:** topo da capa, `x 60, y 48`, ocupa até cerca de `y 190`. Deixe essa faixa sem
   etiquetas. Se algo importante da foto estiver ali, desça o `y` do gancho.
-- **Etiqueta da capa:** bloco de cerca de 360 x 150 px. Coloque sobre fundo (chão, parede,
+- **Etiqueta da capa:** bloco de cerca de 360 x 120 px (nome e preço cheio). Coloque sobre fundo (chão, parede,
   céu), do lado da peça com mais espaço livre, sem cobrir rosto nem produto. `alinhar:
   esquerda` usa `x` como borda esquerda; `direita` usa `x` como borda direita (1036 encosta
   na margem).

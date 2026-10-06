@@ -323,7 +323,7 @@ def renderizar(pasta: Path, config: dict) -> None:
 
     with Image.open(pasta / post["foto"]) as im:
         foto_w, foto_h = im.size
-    gancho = calcular_gancho(post["produtos"], config["texto"]["item"])
+    gancho = calcular_gancho(post["produtos"], post.get("item", config["texto"]["item"]))
 
     def seta(s):
         return None if not s else {**s, "url": (ASSETS / "setas" / f"{s['img']}.png").as_uri(),

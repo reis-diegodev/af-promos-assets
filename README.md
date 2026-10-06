@@ -84,9 +84,10 @@ aos marcadores `{cta}` e de hashtags e não serve mais de modelo). Preços: `pre
 A API do Buffer não envia áudio. Por isso `publicacao` no `config.json` define o modo de
 cada rede:
 
-- `notification` (padrão do perfil): no horário, o app do Buffer avisa no celular; você toca
+- `notification` (TikTok): no horário, o app do Buffer avisa no celular; você toca
   no aviso, o post abre no app da rede, você escolhe um som em alta e publica.
-- `automatic`: o Buffer publica sozinho, sem música.
+- `automatic` (Instagram): o Buffer publica sozinho, sem música. Logo depois, edite o post no
+  Instagram e adicione o som; a edição mantém curtidas, comentários e alcance.
 
 Para o aviso chegar, o app do Buffer precisa estar instalado, logado e com notificações
 ativas. O `post.json` registra o modo usado em cada canal.

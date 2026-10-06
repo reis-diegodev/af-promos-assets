@@ -94,5 +94,26 @@
         "zoom": 1.8
       }
     }
-  ]
+  ],
+  "agendamento": {
+    "posts": {
+      "instagram": {
+        "id": "6ac568dbb77273576dc264c8",
+        "dueAt": "2026-10-06T22:00:00.000Z",
+        "publicacao": "notification"
+      },
+      "tiktok": {
+        "id": "6ac568dc5a8d2d13237b972d",
+        "dueAt": "2026-10-06T22:00:00.000Z",
+        "publicacao": "notification"
+      }
+    },
+    "commit": "5c40a284fdf257475e18199f3677ed24fc37f7ce",
+    "urls": [
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/5c40a284fdf257475e18199f3677ed24fc37f7ce/posts/2026-10-06-adidas-sandrini/out/slide-1.jpg",
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/5c40a284fdf257475e18199f3677ed24fc37f7ce/posts/2026-10-06-adidas-sandrini/out/slide-2.jpg",
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/5c40a284fdf257475e18199f3677ed24fc37f7ce/posts/2026-10-06-adidas-sandrini/out/slide-3.jpg",
+      "https://raw.githubusercontent.com/reis-diegodev/af-promos-assets/5c40a284fdf257475e18199f3677ed24fc37f7ce/posts/2026-10-06-adidas-sandrini/out/slide-4.jpg"
+    ]
+  }
 }

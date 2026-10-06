@@ -140,10 +140,11 @@ def montar_textos(post: dict, gancho: dict, config: dict) -> dict:
         tags, av = montar_hashtags(post, config, canal)
         avisos += [a for a in av if a not in avisos]
         linha = " ".join(tags)
-        if "{hashtags}" in base:
-            texto = base.replace("{hashtags}", linha)
+        texto = base.replace("{cta}", config.get("cta_legenda", {}).get(canal, ""))
+        if "{hashtags}" in texto:
+            texto = texto.replace("{hashtags}", linha)
         else:
-            texto = f"{base.rstrip()}\n\n{linha}" if linha else base
+            texto = f"{texto.rstrip()}\n\n{linha}" if linha else texto
         legendas[canal] = re.sub(r"\n{3,}", "\n\n", texto).strip()
         hashtags[canal] = tags
     titulo = post.get("titulo_tiktok", "{gancho}").replace("{gancho}", frase)[:90]
@@ -169,6 +170,23 @@ def checar_hashtags(post: dict, config: dict, para_agendar: bool) -> tuple[list[
     return erros, avisos
 
 
+def checar_cta(post: dict, config: dict, para_agendar: bool) -> list[str]:
+    """O CTA muda por rede (no TikTok sem link na bio, ele aponta para o Instagram):
+    vem do config.json pelo marcador {cta}, nunca escrito à mão na legenda."""
+    if para_agendar:  # post já aprovado: vale a legenda gravada no manifesto
+        return []
+    erros = []
+    legenda = post.get("legenda", "")
+    if "{cta}" not in legenda:
+        erros.append("legenda: falta o marcador {cta}; o chamado para o grupo vem de cta_legenda no config.json")
+    if re.search(r"link\s+(do\s+grupo\s+)?t[áa]\s+na\s+bio|link\s+na\s+bio", legenda, re.IGNORECASE):
+        erros.append("legenda: tire o 'link na bio' escrito à mão; use {cta}, que muda por rede")
+    for canal in post.get("canais", []):
+        if not config.get("cta_legenda", {}).get(canal):
+            erros.append(f"config.json: falta cta_legenda.{canal}")
+    return erros
+
+
 DATA_CRAVADA = re.compile(r"\b\d{1,2}/\d{1,2}\b|\bdia\s+\d{1,2}\b", re.IGNORECASE)
 
 
@@ -179,6 +197,7 @@ def checar_termos(post: dict, config: dict) -> list[str]:
     padrao = re.compile(r"(?<!\w)(" + "|".join(re.escape(t) for t in termos) + r")(?!\w)", re.IGNORECASE) if termos else None
     textos = {"legenda": post.get("legenda", ""), "titulo_tiktok": post.get("titulo_tiktok", "")}
     textos.update({f"config.texto.{k}": v for k, v in config.get("texto", {}).items()})
+    textos.update({f"config.cta_legenda.{k}": v for k, v in config.get("cta_legenda", {}).items()})
     erros = []
     for onde, texto in textos.items():
         achados = (padrao.findall(texto) if padrao else []) + DATA_CRAVADA.findall(texto)
@@ -268,6 +287,7 @@ def validar(pasta: Path, config: dict, para_agendar: bool = False) -> tuple[dict
     erros.extend(checar_termos(post, config))
     e_tags, a_tags = checar_hashtags(post, config, para_agendar)
     erros.extend(e_tags)
+    erros.extend(checar_cta(post, config, para_agendar))
     avisos.extend(a_tags)
 
     try:

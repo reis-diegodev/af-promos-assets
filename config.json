@@ -14,7 +14,11 @@
     "rotulo_cheio": "preço cheio",
     "saiu_por": "no grupo saiu por",
     "cta_1": "entra no grupo",
-    "cta_2": "pra não perder a próxima · link na bio"
+    "cta_2": "pra não perder a próxima · link no perfil"
+  },
+  "cta_legenda": {
+    "instagram": "As ofertas do grupo saem e acabam rápido. Pra não perder a próxima, o link do grupo tá na bio.",
+    "tiktok": "As ofertas do grupo saem e acabam rápido. Pra não perder a próxima, o link do grupo tá no nosso Insta, @afqpromo."
   },
   "termos_proibidos": [
     "hoje",

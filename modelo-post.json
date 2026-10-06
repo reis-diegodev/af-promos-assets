@@ -1,0 +1,94 @@
+{
+  "titulo": "O que saiu no grupo: <marcas>",
+  "foto": "foto.png",
+  "foto_gerada_por_ia": true,
+  "agendar_em": "AAAA-MM-DDTHH:MM:00-03:00",
+  "canais": [
+    "instagram",
+    "tiktok"
+  ],
+  "legenda": "{gancho} 👀\n\n{precos}\n\n{cta}",
+  "titulo_tiktok": "{gancho}",
+  "gancho": {
+    "x": 60,
+    "y": 48
+  },
+  "produtos": [
+    {
+      "id": "tenis",
+      "nome": "tênis Fila Float Maxxi 2",
+      "preco_cheio": 599,
+      "preco_grupo": 363,
+      "print": "print-tenis.png",
+      "capa": {
+        "etiqueta": {
+          "x": 1036,
+          "y": 1000,
+          "alinhar": "direita"
+        },
+        "seta": {
+          "img": "curva-esquerda",
+          "x": 578,
+          "y": 1136,
+          "largura": 150
+        }
+      },
+      "final": {
+        "etiqueta": {
+          "x": 1036,
+          "y": 760,
+          "alinhar": "direita"
+        },
+        "seta": {
+          "img": "curva-baixo",
+          "x": 710,
+          "y": 1000,
+          "largura": 130
+        }
+      },
+      "recorte": {
+        "cx": 0.368,
+        "cy": 0.826,
+        "zoom": 1.812
+      }
+    },
+    {
+      "id": "camiseta",
+      "nome": "camiseta Nike Dri-FIT UV Miler",
+      "preco_cheio": 149,
+      "preco_grupo": 79,
+      "print": "print-camiseta.png",
+      "capa": {
+        "etiqueta": {
+          "x": 60,
+          "y": 226,
+          "alinhar": "esquerda"
+        },
+        "seta": {
+          "img": "zigue",
+          "x": 420,
+          "y": 350,
+          "largura": 123
+        }
+      },
+      "final": {
+        "etiqueta": {
+          "x": 60,
+          "y": 226,
+          "alinhar": "esquerda"
+        },
+        "seta": {
+          "img": "zigue",
+          "x": 420,
+          "y": 400,
+          "largura": 123
+        }
+      },
+      "recorte": {
+        "cx": 0.675,
+        "cy": 0.4,
+        "zoom": 1.672
+      }
+    }
+  ]
+}

@@ -64,7 +64,8 @@ metade." e abaixo disso vira "saiu R$ X mais barato.".
 
 ## post.json
 
-Veja `posts/2026-10-02-nike-fila/post.json`. Preços: `preco_cheio` é o "de" e `preco_grupo` é o
+Para um post novo, copie `modelo-post.json` (o post de `posts/2026-10-02-nike-fila/` é anterior
+aos marcadores `{cta}` e de hashtags e não serve mais de modelo). Preços: `preco_cheio` é o "de" e `preco_grupo` é o
 "por" da mensagem do grupo, exatamente como aparecem no print. Campos de layout (px num slide de 1080x1440):
 
 - `gancho`: canto superior esquerdo do bloco do gancho na capa.
@@ -74,7 +75,7 @@ Veja `posts/2026-10-02-nike-fila/post.json`. Preços: `preco_cheio` é o "de" e 
   `largura` e, opcional, `rot` em graus.
 - `recorte`: `cx` e `cy` (centro do produto na foto, de 0 a 1) e `zoom` (1,6 a 1,9 costuma
   enquadrar uma peça). O script converte e nunca deixa borda vazia.
-- `legenda`: só a prosa, com `{gancho}` e `{precos}`, que o script substitui, e
+- `legenda`: só a prosa, com `{gancho}`, `{precos}` e `{cta}`, que o script substitui, e
   opcionalmente `{hashtags}` para escolher onde as hashtags entram (sem o marcador, elas vão
   no fim). Nunca escreva `#` à mão.
 
@@ -95,6 +96,14 @@ ativas. O `post.json` registra o modo usado em cada canal.
 Cada chat do Projeto grava num branch próprio. Depois de agendar, abra o PR e faça o merge
 com **Create a merge commit**. Nunca use Squash nem Rebase: os links das imagens enviados ao
 Buffer apontam para o commit original, e esses modos o tiram do histórico.
+
+## Chamado para o grupo (CTA)
+
+`cta_legenda` no `config.json` traz a frase de cada rede, inserida no lugar de `{cta}`. Hoje o
+Instagram aponta para o link na bio e o TikTok aponta para o Instagram, porque conta pessoal
+só libera link na bio a partir de 1.000 seguidores. Quando o TikTok liberar o link, troque só
+a frase do TikTok. O slide final diz "link no perfil", que vale para as duas redes. Legenda nova
+sem `{cta}` ou com "link na bio" escrito à mão é recusada.
 
 ## Hashtags
 

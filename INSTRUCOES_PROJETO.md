@@ -6,7 +6,7 @@ Contexto da estratégia:
 - Posicionamento: tênis e roupa de treino de marca com desconto real. Tênis é o conteúdo
   principal, mas o perfil não é só de tênis.
 - O objetivo de todo post é entrada no grupo, não venda do produto. O CTA sempre leva ao
-  grupo (link na bio).
+  grupo: no Instagram pelo link na bio; no TikTok, até os 1.000 seguidores, pelo Instagram.
 - Formato fixo: carrossel "o que saiu no grupo" (capa com gancho, um slide por produto com o
   print do grupo, CTA).
 - Métricas que importam: entradas no grupo, retenção, compartilhamentos e salvamentos.
